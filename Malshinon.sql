@@ -4,12 +4,12 @@ USE Malshinon;
 
 CREATE TABLE IF NOT EXISTS People (
     `ID` INT PRIMARY KEY AUTO_INCREMENT,
-    `First_Name` VARCHAR(10) UNIQUE NOT NULL,
-    `Last_Name` VARCHAR(10) UNIQUE NOT NULL,
+    `First_Name` VARCHAR(20) UNIQUE NOT NULL,
+    `Last_Name` VARCHAR(20) UNIQUE NOT NULL,
     `Secret_Code` VARCHAR(20) UNIQUE NOT NULL,
     `Type` ENUM ('reporter','target','both','potential_agent') DEFAULT 'reporter',
-    `Num_Reports` INT DEFAULT 0 CHECK(`Type` = 'reporter'),
-    `Num_Mentions` INT DEFAULT 0 CHECK(`Type` = 'target')
+    `Num_Reports` INT DEFAULT 0,
+    `Num_Mentions` INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS IntelReports(
