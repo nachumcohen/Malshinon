@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Malshinons.DAL;
 
 namespace Malshinons
 {
@@ -10,6 +11,8 @@ namespace Malshinons
     {
         static void Main(string[] args)
         {
+            DalPerson dalPerson = new DalPerson();
+            dalPerson.IntelSubmissionFlow();
         }
     }
 }
