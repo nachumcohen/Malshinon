@@ -15,17 +15,21 @@ namespace Malshinons
         {
             Console.WriteLine(@"Chooce
                                 1. Add Person
-                                2. Add IntelReports");
+                                2. Add IntelReports
+                                3. is id in alert");
 
             string Choos = Console.ReadLine();
 
             switch (Choos)
             {
                 case "1":
-                    Servis.CheckIsPerson();
+                    Service.ServicePerson();
                     break;
                 case "2":
-                    Servis.IntelSubmissionFlow();
+                    Service.ServiceIntelSubmission();
+                    break;
+                case "3":
+                    Service.ServiceAlert();
                     break;
             }
         }

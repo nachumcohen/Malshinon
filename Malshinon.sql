@@ -23,3 +23,13 @@ CREATE TABLE IF NOT EXISTS IntelReports(
     
 );
 
+CREATE TABLE IF NOT EXISTS Alerts (
+    `ID` INT PRIMARY KEY AUTO_INCREMENT,
+    `Target_Id` INT,
+    FOREIGN KEY (`Target_Id`) REFERENCES `IntelReports`(`Target_Id`),
+    `StartTime` DATETIME NOT NULL,
+    `EndTime` DATETIME NOT NULL,
+    `Create_AT` DATETIME DEFAULT NOW(),
+    `Reason` TEXT
+)
+

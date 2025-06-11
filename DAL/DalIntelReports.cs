@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Malshinons.Models;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Malshinons.Models;
-using MySql.Data.MySqlClient;
 
 namespace Malshinons.DAL
 {
@@ -12,59 +13,6 @@ namespace Malshinons.DAL
     internal static class DalIntelReports
     {
         private static string connStr = DbConfig.ConnectionString;
-        public static void ToIncreaseNumReports(int Id)
-        {
-            string query = "UPDATE people SET Num_Reports = Num_Reports +1 WHERE ID = @Id ";
-
-            using (MySqlConnection conn = new MySqlConnection(connStr))
-            {
-
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-
-                    try
-                    {
-                        conn.Open();
-                        cmd.Parameters.AddWithValue("@Id", Id);
-                        cmd.ExecuteNonQuery();
-
-                        Console.WriteLine("add NumReports");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"error ToIncreaseNumReports: {ex.Message}");
-                    }
-                }
-
-            }
-
-        }
-        public static void ToIncreaseNumMentions(int Id)
-        {
-            string query = "UPDATE people SET Num_Mentions = Num_Mentions +1 WHERE ID = @Id";
-
-            using (MySqlConnection conn = new MySqlConnection(connStr))
-            {
-
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-
-                    try
-                    {
-                        conn.Open();
-                        cmd.Parameters.AddWithValue("@Id", Id);
-                        cmd.ExecuteNonQuery();
-
-                        Console.WriteLine("add NumMentions");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"error ToIncreaseNumMentions: {ex.Message}");
-                    }
-                }
-
-            }
-        }
 
         public static int AvgText(int id)
         {
@@ -188,6 +136,39 @@ namespace Malshinons.DAL
                 }
 
         }
+
+        public static Alert GetPotentialAlert(int Id, int minute)
+        {
+            Alert alert = null;
+            string query = @"SELECT TARGET_ID, COUNT(TARGET_ID) Total , MAX(Timestamp) Max , MIN(Timestamp) Min
+                      FROM intelreports WHERE (Timestamp BETWEEN NOW() - INTERVAL @minute MINUTE and NOW()) AND (TARGET_ID = @id ) 
+                      GROUP BY Target_Id HAVING Total > 2;";
+
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", Id);
+                    cmd.Parameters.AddWithValue("@minute", minute);
+                    conn.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            alert = new Alert();
+                            alert.TargetId = reader.GetInt32("TARGET_ID");
+                            alert.Time1 = reader.GetDateTime("Min");
+                            alert.Time2 = reader.GetDateTime("Max");
+                        }
+                    }
+
+                }
+            }
+
+            return alert;
+        }
+
+
 
     }
 }
