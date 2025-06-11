@@ -95,7 +95,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\DalPerson.cs" />
+    <Compile Include="DAL\DalIntelReports.cs" />
+    <Compile Include="DAL\DalPerson1.cs" />
+    <Compile Include="DAL\DalPerson2.cs" />
+    <Compile Include="DAL\DbConfig.cs" />
+    <Compile Include="Logic\Class1.cs" />
+    <Compile Include="Logic\Servis.cs" />
     <Compile Include="Models\IntelReports.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Program.cs" />

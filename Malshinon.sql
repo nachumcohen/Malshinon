@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS People (
     `First_Name` VARCHAR(20) UNIQUE NOT NULL,
     `Last_Name` VARCHAR(20) UNIQUE NOT NULL,
     `Secret_Code` VARCHAR(20) UNIQUE NOT NULL,
-    `Type` ENUM ('reporter','target','both','potential_agent') DEFAULT 'reporter',
+    `Type` ENUM ('reporter','target','both','potential_agent'),
     `Num_Reports` INT DEFAULT 0,
     `Num_Mentions` INT DEFAULT 0
 );
