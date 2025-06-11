@@ -16,11 +16,12 @@ namespace Malshinons.Modles
         public int NumReports { get; set; }
         public int NumMentions { get; set; }
 
-        public Person(string firstName, string lastName, string secretCode)
+        public Person(string firstName, string lastName, string secretCode , string type)
         {
             FirstName = firstName;
             LastName = lastName;
             SecretCode = secretCode;
+            Type = type;
         }
     }
 }
