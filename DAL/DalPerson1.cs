@@ -529,7 +529,7 @@ namespace Malshinons.DAL
         }
 
     
- //logic                   
+       //logic                   
         public void potentialThreatAlert(int id)
         {
             try

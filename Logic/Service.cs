@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Malshinons.Logic
 {
-    internal class Servis
+    internal static class Service
     {
-        public void IntelSubmissionFlow()
+        public static void ServiceIntelSubmission()
         {
             string FirstNameReporter;
             string LastNameReporter;
@@ -23,8 +23,8 @@ namespace Malshinons.Logic
             string Report = Console.ReadLine();
 
             string[] Repo = Report.Split(' ');
-            List<string> FullNameTarget = Class1.FindFullName(Repo);
-            List<string> FullNameReporter = CheckIsPerson();
+            List<string> FullNameTarget = Logi.FindFullName(Repo);
+            List<string> FullNameReporter = ServicePerson();
 
             if (FullNameReporter.Count == 2 && FullNameTarget.Count == 2)
             {
@@ -34,19 +34,19 @@ namespace Malshinons.Logic
                 FirstNameTarget = FullNameTarget[0];
                 LastNameTarget = FullNameTarget[1];
 
-                if (!DalPerson2.IsPerson(FirstNameTarget, LastNameTarget))
+                if (!DalPerson.IsPerson(FirstNameTarget, LastNameTarget))
                 {
-                    Person person = Class1.CreatedPerson(FirstNameTarget, LastNameTarget, "target");
-                    DalPerson2.AddPerson(person);
+                    Person person = Logi.CreatedPerson(FirstNameTarget, LastNameTarget, "target");
+                    DalPerson.AddPerson(person);
                 }
                 try
                 {
-                    int idReporter = DalPerson2.returnID(FirstNameReporter);
-                    int idTarget = DalPerson2.returnID(FirstNameTarget);
+                    int idReporter = DalPerson.returnID(FirstNameReporter);
+                    int idTarget = DalPerson.returnID(FirstNameTarget);
 
                     if (idReporter > 0 && idTarget > 0 && Report.Length > 30)
                     {
-                        IntelReports intelReports = Class1.CreatedIntelRepots(idReporter, idTarget, Report);
+                        IntelReports intelReports = Logi.CreatedIntelRepots(idReporter, idTarget, Report);
                         DalIntelReports.AddIntelRepots(intelReports);
                     }
                     else
@@ -56,12 +56,14 @@ namespace Malshinons.Logic
                     }
                     
 
-                    string Type = Class1.ReturnType(idTarget);
-                    DalPerson2.TypeChange(idTarget, Type);
+                    string Type = Logi.ReturnType(idTarget);
+                    DalPerson.TypeChange(idTarget, Type);
 
 
-                    DalIntelReports.ToIncreaseNumMentions(idReporter);
-                    DalIntelReports.ToIncreaseNumReports(idReporter);
+                    DalPerson.ToIncreaseNumMentions(idReporter);
+                    DalPerson.ToIncreaseNumReports(idReporter);
+
+                    Logi.PotentialThreatAlert(idTarget);
 
                 }
                 catch (Exception ex)
@@ -76,7 +78,7 @@ namespace Malshinons.Logic
             }
         }
 
-        public List<string> CheckIsPerson()
+        public static List<string> ServicePerson()
         {
             string FirstName = "";
             string LastName = "";
@@ -91,7 +93,7 @@ namespace Malshinons.Logic
 
                 string[] inputList = new string[2] { FirstName, LastName };
 
-                FullName = Class1.FindFullName(inputList);
+                FullName = Logi.FindFullName(inputList);
                 if (FullName.Count == 2)
                 {
                     Console.WriteLine("The full name is correct");
@@ -101,19 +103,47 @@ namespace Malshinons.Logic
                     Console.WriteLine("enter only letter and at least tow letter");
                 }
             }
-            if (!DalPerson2.IsPerson(FirstName, LastName))
+            if (!DalPerson.IsPerson(FirstName, LastName))
             {
 
-                DalPerson2.AddPerson(Class1.CreatedPerson(FirstName, LastName, "reporter"));
+                DalPerson.AddPerson(Logi.CreatedPerson(FirstName, LastName, "reporter"));
             }
             else
             {
-                int id = DalPerson2.returnID(FirstName);
-                string Type = Class1.ReturnType(id);
-                DalPerson2.TypeChange(id, Type);
+                int id = DalPerson.returnID(FirstName);
+                string Type = Logi.ReturnType(id);
+                DalPerson.TypeChange(id, Type);
+                Logi.PotentialThreatAlert(id);
+                ServiceAlert(id, 15);
+                
             }
 
             return FullName;
+        }
+
+        public static void ServiceAlert(int id, int mineute)
+        {
+            Alert alert = DalIntelReports.GetPotentialAlert(id, mineute);
+            if (alert == null)
+            {
+                Console.WriteLine("no alert");
+            }
+            else
+            {
+                if (alert.Reason == null)
+                {
+                    alert.Reason = "Rapid reports detected";
+                }
+                try
+                {
+                    DalAlerts.AddAlert(alert);
+                    Console.WriteLine($"{id} add Alert");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"error checkAlert : {ex.Message}");
+                }
+            }
         }
     }
 }

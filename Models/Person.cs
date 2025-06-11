@@ -23,5 +23,9 @@ namespace Malshinons.Modles
             SecretCode = secretCode;
             Type = type;
         }
+        public Person()
+        {
+
+        }
     }
 }

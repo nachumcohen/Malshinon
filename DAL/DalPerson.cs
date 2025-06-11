@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 
 namespace Malshinons.DAL
 {
-    internal static class DalPerson2
+    internal static class DalPerson
     {
         private static string connStr = DbConfig.ConnectionString;
         public static bool IsPerson(string FirstName, string LastName)
@@ -40,6 +40,85 @@ namespace Malshinons.DAL
             }
             return false;
 
+        }
+
+        public static Person getPersonByName(string FirstName)
+        {
+            Person person = new Person();
+            MySqlDataReader reader = null;
+            string query = "SELECT * FROM people WHERE First_Name = @FirstName";
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                {
+                    
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        conn.Open();
+                        cmd.Parameters.AddWithValue("@FirstName", FirstName);
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                person.ID = reader.GetInt32("ID");
+                                person.FirstName = reader.GetString("First_Name");
+                                person.LastName = reader.GetString("Last_Name");
+                                person.Type = reader.GetString("Type");
+                                person.SecretCode = reader.GetString("Secret_Code");
+                                person.NumReports = reader.GetInt32("Num_Reports");
+                                person.NumMentions = reader.GetInt32("Num_Mentions");
+
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ex.Message{ex.Message}");
+            }
+            return person;
+        }
+        public static Person getPersonBySecretCode(string SecretCode)
+        {
+            Person person = new Person();
+            MySqlDataReader reader = null;
+            string query = "SELECT * FROM people WHERE Secret_Code = @SecretCode";
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                {
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        conn.Open();
+                        cmd.Parameters.AddWithValue("@SecretCode", SecretCode);
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                person.ID = reader.GetInt32("ID");
+                                person.FirstName = reader.GetString("First_Name");
+                                person.LastName = reader.GetString("Last_Name");
+                                person.Type = reader.GetString("Type");
+                                person.SecretCode = reader.GetString("Secret_Code");
+                                person.NumReports = reader.GetInt32("Num_Reports");
+                                person.NumMentions = reader.GetInt32("Num_Mentions");
+
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ex.Message{ex.Message}");
+            }
+            return person;
         }
 
         public static void AddPerson(Person person)

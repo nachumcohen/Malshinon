@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Malshinons.Logic
 {
-    internal static class Class1
+    internal static class Logi
     {
         public static Person CreatedPerson(string FirstName, string LastName, string type)
         {
@@ -114,6 +114,9 @@ namespace Malshinons.Logic
                 Console.WriteLine($"error potentialThreatAlert{ex.Message}");
             }
         }
+
+
+        
        
         
     }
